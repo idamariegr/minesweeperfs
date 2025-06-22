@@ -6,6 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="fields.fs" />
+    <Compile Include="maps.fs" />
+    <Compile Include="visual.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
