@@ -21,7 +21,7 @@ let getCoord ( s : string ) ( max : int ) : int =
 
 let gameRandom ( bombs : int ) ( n : int ) ( m : int ) =
     let fieldmap = randomMap bombs n m
-    let shownmap : char[,] = Array2D.create n m hidechar
+    let shownmap = Array2D.create n m hidechar
     let secretmap = fieldmap |> Array2D.map(fieldToChar)
     let visited = HashSet<int * int>()
     let mutable safeFieldsToGo = (n * m) - bombs
@@ -30,9 +30,7 @@ let gameRandom ( bombs : int ) ( n : int ) ( m : int ) =
         let r = getCoord "Row" (n - 1)
         let c = getCoord "Column" (m - 1)
         match fieldmap.[r,c] with
-            | Safe 0 -> clearUp fieldmap secretmap shownmap r c n m visited &safeFieldsToGo
-            | Safe x -> safeFieldsToGo <- safeFieldsToGo - 1
-                        shownmap.[r,c] <- secretmap.[r,c]
+            | Safe x -> clearUp fieldmap secretmap shownmap r c n m visited &safeFieldsToGo
             | Bomb -> gameOver secretmap "Game Lost!" n m
 
     gameOver secretmap "Game Won!" n m
@@ -53,13 +51,11 @@ let gameFromPath ( path : string) =
         let r = getCoord "Row" (n - 1)
         let c = getCoord "Column" (m - 1)
         match fieldmap.[r,c] with
-            | Safe 0 -> clearUp fieldmap secretmap shownmap r c n m visited &safeFieldsToGo
-            | Safe x -> safeFieldsToGo <- safeFieldsToGo - 1
-                        shownmap.[r,c] <- secretmap.[r,c]
+            | Safe x -> clearUp fieldmap secretmap shownmap r c n m visited &safeFieldsToGo
             | Bomb -> gameOver secretmap "Game Lost!" n m
 
     gameOver secretmap "Game Won!" n m
 
 // running the game
-//gameFromPath(mappath)
-gameRandom 35 15 15
+gameFromPath(mappath)
+//gameRandom 35 15 15
