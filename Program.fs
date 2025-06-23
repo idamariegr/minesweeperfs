@@ -19,6 +19,24 @@ let getCoord ( s : string ) ( max : int ) : int =
                         else failwithf "coordinate for %s may not be more than %A" s max
         | (false, _) -> failwithf "coordinate must be int"
 
+let gameRandom ( bombs : int ) ( n : int ) ( m : int ) =
+    let fieldmap = randomMap bombs n m
+    let shownmap : char[,] = Array2D.create n m hidechar
+    let secretmap = fieldmap |> Array2D.map(fieldToChar)
+    let visited = HashSet<int * int>()
+    let mutable safeFieldsToGo = (n * m) - bombs
+    while safeFieldsToGo > 0 do
+        printMap shownmap n m
+        let r = getCoord "Row" (n - 1)
+        let c = getCoord "Column" (m - 1)
+        match fieldmap.[r,c] with
+            | Safe 0 -> clearUp fieldmap secretmap shownmap r c n m visited &safeFieldsToGo
+            | Safe x -> safeFieldsToGo <- safeFieldsToGo - 1
+                        shownmap.[r,c] <- secretmap.[r,c]
+            | Bomb -> gameOver secretmap "Game Lost!" n m
+
+    gameOver secretmap "Game Won!" n m
+
 let gameFromPath ( path : string) =
     let initialmap : char[,] = fileToChars(path)
     let n, m = (initialmap |> Array2D.length1), (initialmap |> Array2D.length2)
@@ -43,4 +61,5 @@ let gameFromPath ( path : string) =
     gameOver secretmap "Game Won!" n m
 
 // running the game
-gameFromPath(mappath)
+//gameFromPath(mappath)
+gameRandom 35 15 15

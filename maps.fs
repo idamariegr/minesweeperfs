@@ -4,7 +4,7 @@ open System.Collections.Generic
 open System
 open fields
 
-let fileToChars (path : string) : char[,] =
+let fileToChars ( path : string ) : char[,] =
     array2D(IO.File.ReadLines(path) |> Seq.toArray |> Seq.map(fun x -> x.ToCharArray()))
 
 let incrementSafe (map : field[,]) (r : int) (c : int) =
@@ -30,6 +30,16 @@ let updateNumsMap(originalMap : field[,]) ( n : int ) ( m : int ) =
         for c in 0..m-1 do
             if originalMap.[r,c] = Bomb then
                 updateSafes originalMap n m r c
+
+let randomMap ( bombs : int ) ( n : int ) ( m : int ) : field[,] =
+    let map = Array2D.create n m (Safe 0)
+    let rnd = new Random()
+    for _ in 0..bombs-1 do
+        let randRow = rnd.Next(0,n) // lower bound inclusive, upper bound exclusive
+        let randCol = rnd.Next(0,m)
+        map.[randRow,randCol] <- Bomb
+    updateNumsMap map n m
+    map
 
 let getFieldMap (lines : char[,]) (n : int) (m : int) : field[,] =
     let newlines = lines |> Array2D.map charToField

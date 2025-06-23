@@ -6,6 +6,6 @@ run the game with:
 - `dotnet run`
 
 ## todo
-- [ ] generate random map
+- [x] generate random map
 - [ ] give map based on first coordinates (so that they don't hit a bomb)
 - [ ] colored numbers?
