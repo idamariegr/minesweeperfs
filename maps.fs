@@ -6,7 +6,7 @@ open System.Collections.Generic
 let charToField (s : char) : field =
     match s with
         | '.' -> Safe 0
-        | '*' -> numbombs <- numbombs+1; Bomb
+        | '*' -> Bomb
         | _ -> failwithf "unknown charachter encountered when reading map: %A" s
 
 let fileToChars (path : string) : char[,] =
@@ -42,15 +42,19 @@ let getFieldMap (lines : char[,]) (n : int) (m : int) : field[,] =
     newlines
 
 let rec clearUp ( fieldmap : field[,] ) ( secret : char[,] ) ( exposed : char[,])
-                ( r : int ) ( c : int ) ( n : int ) ( m : int ) ( visited : HashSet<int * int> ) =
+                ( r : int ) ( c : int )
+                ( n : int ) ( m : int )
+                ( visited : HashSet<int * int> )
+                ( counter : byref<int> ) =
     if r < 0 || r >= n || c < 0 || c >= m then ()
     elif visited.Contains (r, c) then ()
     else
         visited.Add (r, c) |> ignore
         exposed.[r,c] <- secret.[r,c]
+        counter <- counter + 1
         match fieldmap.[r,c] with
              | Safe 0 ->
                  for rr in -1..1 do
                      for cc in -1..1 do
-                         clearUp fieldmap secret exposed (r+rr) (c+cc) n m visited
+                         clearUp fieldmap secret exposed (r+rr) (c+cc) n m visited &counter
              | _ -> ()

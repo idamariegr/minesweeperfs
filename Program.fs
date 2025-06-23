@@ -7,7 +7,7 @@ open fields
 
 let mappath = "Assets/map1.txt"
 
-let gameOver (map: char[,])  (s: string) ( n : int ) (m : int) =
+let gameOver (map: char[,])  (s: string) ( n : int ) ( m : int ) =
     printMap map n m
     printfn "%s" s
     Environment.Exit(3)
@@ -19,26 +19,28 @@ let getCoord ( s : string ) ( max : int ) : int =
                         else failwithf "coordinate for %s may not be more than %A" s max
         | (false, _) -> failwithf "coordinate must be int"
 
+let gameFromPath ( path : string) =
+    let initialmap : char[,] = fileToChars(path)
+    let n, m = (initialmap |> Array2D.length1), (initialmap |> Array2D.length2)
+    let shownmap : char[,] = Array2D.create n m hidechar
+    let fieldmap : field[,] = getFieldMap initialmap n m
+    let secretmap : char[,] = fieldmap |> Array2D.map(fieldToChar)
+    let visited = HashSet<int * int>()
+    let mutable numbombs = 0
+    fieldmap |> Array2D.iter(fun f -> if f = Bomb then numbombs <- numbombs + 1)
+    let mutable safeFieldsToGo = (n * m) - numbombs
+    // game loop
+    while safeFieldsToGo > 0 do//remainingfields > 0 do
+        printMap shownmap n m
+        let r = getCoord "Row" (n - 1)
+        let c = getCoord "Column" (m - 1)
+        match fieldmap.[r,c] with
+            | Safe 0 -> clearUp fieldmap secretmap shownmap r c n m visited &safeFieldsToGo
+            | Safe x -> safeFieldsToGo <- safeFieldsToGo - 1
+                        shownmap.[r,c] <- secretmap.[r,c]
+            | Bomb -> gameOver secretmap "Game Lost!" n m
 
-// inits
-let secretmap : char[,] = fileToChars(mappath)
-let n, m = (secretmap |> Array2D.length1), (secretmap |> Array2D.length2)
-let shownmap : char[,] = Array2D.create n m hidechar//secretmap |> Array2D.map (fun x -> hidechar)
-let fieldmap : field[,] = getFieldMap secretmap n m
-//updateNumsMap fieldmap
-let exposedmap : char[,] = fieldmap |> Array2D.map(fieldToChar)
-let visited = HashSet<int * int>()
-let mutable remainingfields = (n * m) - numbombs
-// game loop
-while remainingfields > 0 do
-    printMap shownmap n m
-    let r = getCoord "Row: " (n - 1)
-    let c = getCoord "Column: " (m - 1)
-    printfn "%A %A" r c
-    match fieldmap.[r,c] with
-            | Safe 0 -> clearUp fieldmap exposedmap shownmap r c n m visited
-            | Safe x -> remainingfields <- remainingfields - 1
-                        shownmap.[r,c] <- exposedmap.[r,c]//clearUp fieldmap secretmap exposedMap r c n m
-            | Bomb -> gameOver exposedmap "Game Lost!" n m
+    gameOver secretmap "Game Won!" n m
 
-gameOver exposedmap "Game Won!" n m
+// running the game
+gameFromPath(mappath)
