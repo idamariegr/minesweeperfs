@@ -25,13 +25,22 @@ let gameRandom ( bombs : int ) ( n : int ) ( m : int ) =
     let secretmap = fieldmap |> Array2D.map(fieldToChar)
     let visited = HashSet<int * int>()
     let mutable safeFieldsToGo = (n * m) - bombs
+    //let mutable firstInput = true
     while safeFieldsToGo > 0 do
         printMap shownmap n m
         let r = getCoord "Row" (n - 1)
         let c = getCoord "Column" (m - 1)
+
+        // if firstInput && fieldmap.[r,c] = Bomb then
+        //     let fieldmap = randomMap bombs n m
+        //     let secretmap = fieldmap |> Array2D.map(fieldToChar)
+        //     ()
+        // else firstInput <- false
+
         match fieldmap.[r,c] with
             | Safe x -> clearUp fieldmap secretmap shownmap r c n m visited &safeFieldsToGo
             | Bomb -> gameOver secretmap "Game Lost!" n m
+        printfn "safes remaining: %d" safeFieldsToGo
 
     gameOver secretmap "Game Won!" n m
 
@@ -57,5 +66,5 @@ let gameFromPath ( path : string) =
     gameOver secretmap "Game Won!" n m
 
 // running the game
-gameFromPath(mappath)
-//gameRandom 35 15 15
+//gameFromPath(mappath)
+gameRandom 1 15 15

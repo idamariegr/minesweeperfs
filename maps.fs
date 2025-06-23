@@ -56,7 +56,7 @@ let rec clearUp ( fieldmap : field[,] ) ( secret : char[,] ) ( exposed : char[,]
     else
         visited.Add (r, c) |> ignore
         exposed.[r,c] <- secret.[r,c]
-        counter <- counter + 1
+        counter <- counter - 1
         match fieldmap.[r,c] with
              | Safe 0 ->
                  for rr in -1..1 do
