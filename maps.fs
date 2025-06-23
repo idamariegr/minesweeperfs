@@ -3,12 +3,6 @@ open System
 open fields
 open System.Collections.Generic
 
-let charToField (s : char) : field =
-    match s with
-        | '.' -> Safe 0
-        | '*' -> Bomb
-        | _ -> failwithf "unknown charachter encountered when reading map: %A" s
-
 let fileToChars (path : string) : char[,] =
     array2D(IO.File.ReadLines(path) |> Seq.toArray |> Seq.map(fun x -> x.ToCharArray()))
 
