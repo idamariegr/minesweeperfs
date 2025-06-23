@@ -1,10 +1,8 @@
 module fields
 
-//let mappath = "./map1.txt"
 let hidechar =  '□'
 let blankchar = '.'
 let bombchar = 'x'
-//let mutable numbombs = 0
 
 type field =
     | Bomb

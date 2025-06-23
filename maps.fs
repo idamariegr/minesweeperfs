@@ -1,7 +1,8 @@
 module maps
+
+open System.Collections.Generic
 open System
 open fields
-open System.Collections.Generic
 
 let fileToChars (path : string) : char[,] =
     array2D(IO.File.ReadLines(path) |> Seq.toArray |> Seq.map(fun x -> x.ToCharArray()))
