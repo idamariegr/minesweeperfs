@@ -32,8 +32,8 @@ let mutable remainingfields = (n * m) - numbombs
 // game loop
 while remainingfields > 0 do
     printMap shownmap n m
-    let r = getCoord "X" (n - 1)
-    let c = getCoord "Y" (m - 1)
+    let r = getCoord "Row: " (n - 1)
+    let c = getCoord "Column: " (m - 1)
     printfn "%A %A" r c
     match fieldmap.[r,c] with
             | Safe 0 -> clearUp fieldmap exposedmap shownmap r c n m visited

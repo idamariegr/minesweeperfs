@@ -30,9 +30,7 @@ let updateSafes (map : field[,]) (n : int) (m : int) (r : int) (c : int) =
     if c > 0 then incrementSafe map r (c-1) // left middle
     if c < n-1 then incrementSafe map r (c+1) // right middle
 
-let updateNumsMap(originalMap : field[,]) =
-    let n = originalMap |> Array2D.length1
-    let m = originalMap |> Array2D.length2
+let updateNumsMap(originalMap : field[,]) ( n : int ) ( m : int ) =
     for r in 0..n-1 do
         for c in 0..m-1 do
             if originalMap.[r,c] = Bomb then
@@ -40,7 +38,7 @@ let updateNumsMap(originalMap : field[,]) =
 
 let getFieldMap (lines : char[,]) (n : int) (m : int) : field[,] =
     let newlines = lines |> Array2D.map charToField
-    updateNumsMap newlines
+    updateNumsMap newlines n m
     newlines
 
 let rec clearUp ( fieldmap : field[,] ) ( secret : char[,] ) ( exposed : char[,])
