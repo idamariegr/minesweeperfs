@@ -1,4 +1,6 @@
 ﻿open System
+open System.Collections.Generic
+
 open visual
 open maps
 open fields
@@ -17,17 +19,20 @@ let getCoord ( s : string ) ( max : int ) : int =
                         else failwithf "coordinate for %s may not be more than %A" s max
         | (false, _) -> failwithf "coordinate must be int"
 
-// let rec clearUp ( fieldmap : field[,] ) ( secret : char[,] ) ( exposed : char[,]) ( r : int ) ( c : int ) ( n : int ) ( m : int ) =
-//     if not (fieldmap.[r,c] = Bomb) then
-//         exposed.[r,c] <- secret.[r,c]
-//         // clear up middle above
-//         if r > 0 then clearUp fieldmap secret exposed (r-1) c n m
-//         // clear up middle below
-//         if r < n-1 then clearUp fieldmap secret exposed (r+1) c n m
-//         // clean up right middle
-//         if c < m-1 then clearUp fieldmap secret exposed r (c+1) n m
-//         // clean up left middle
-//         if c > 0 then clearUp fieldmap secret exposed r (c-1) n m
+let rec clearUp ( fieldmap : field[,] ) ( secret : char[,] ) ( exposed : char[,])
+                ( r : int ) ( c : int ) ( n : int ) ( m : int ) ( visited : HashSet<int * int> ) =
+    if r < 0 || r >= n || c < 0 || c >= m then ()
+    elif visited.Contains (r, c) then ()//printfn "contains"; ()
+    else
+        //printfn "not contains"
+        visited.Add (r, c) |> ignore
+        exposed.[r,c] <- secret.[r,c]
+        match fieldmap.[r,c] with
+             | Safe 0 ->
+                 for rr in -1..1 do
+                     for cc in -1..1 do
+                         clearUp fieldmap secret exposed (r+rr) (c+cc) n m visited
+             | _ -> ()
 
 // inits
 let secretmap : char[,] = fileToChars(mappath)
@@ -35,7 +40,8 @@ let n, m = (secretmap |> Array2D.length1), (secretmap |> Array2D.length2)
 let shownmap : char[,] = Array2D.create n m hidechar//secretmap |> Array2D.map (fun x -> hidechar)
 let fieldmap : field[,] = getFieldMap secretmap n m
 //updateNumsMap fieldmap
-let exposedMap : char[,] = fieldmap |> Array2D.map(fieldToChar)
+let exposedmap : char[,] = fieldmap |> Array2D.map(fieldToChar)
+let visited = HashSet<int * int>()
 let mutable remainingfields = (n * m) - numbombs
 // game loop
 while remainingfields > 0 do
@@ -44,8 +50,9 @@ while remainingfields > 0 do
     let c = getCoord "Y" (m - 1)
     printfn "%A %A" r c
     match fieldmap.[r,c] with
+            | Safe 0 -> clearUp fieldmap exposedmap shownmap r c n m visited
             | Safe x -> remainingfields <- remainingfields - 1
-                        shownmap.[r,c] <- exposedMap.[r,c]//clearUp fieldmap secretmap exposedMap r c n m
-            | Bomb -> gameOver exposedMap "Game Lost!" n m
+                        shownmap.[r,c] <- exposedmap.[r,c]//clearUp fieldmap secretmap exposedMap r c n m
+            | Bomb -> gameOver exposedmap "Game Lost!" n m
 
-gameOver exposedMap "Game Won!" n m
+gameOver exposedmap "Game Won!" n m

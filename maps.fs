@@ -1,6 +1,7 @@
 module maps
 open System
 open fields
+open System.Collections.Generic
 
 let charToField (s : char) : field =
     match s with
@@ -43,3 +44,18 @@ let getFieldMap (lines : char[,]) (n : int) (m : int) : field[,] =
     let newlines = lines |> Array2D.map charToField
     updateNumsMap newlines
     newlines
+
+let rec clearUp ( fieldmap : field[,] ) ( secret : char[,] ) ( exposed : char[,])
+                ( r : int ) ( c : int ) ( n : int ) ( m : int ) ( visited : HashSet<int * int> ) =
+    if r < 0 || r >= n || c < 0 || c >= m then ()
+    elif visited.Contains (r, c) then ()//printfn "contains"; ()
+    else
+        //printfn "not contains"
+        visited.Add (r, c) |> ignore
+        exposed.[r,c] <- secret.[r,c]
+        match fieldmap.[r,c] with
+             | Safe 0 ->
+                 for rr in -1..1 do
+                     for cc in -1..1 do
+                         clearUp fieldmap secret exposed (r+rr) (c+cc) n m visited
+             | _ -> ()
