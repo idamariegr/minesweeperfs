@@ -1,4 +1,6 @@
 module visual
+open System
+
 let printMap (map: char[,]) (rows : int) (cols : int) =
     // Print column headers
     printf "    "

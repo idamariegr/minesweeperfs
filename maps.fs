@@ -14,11 +14,9 @@ let fileToChars (path : string) : char[,] =
 
 let incrementSafe (map : field[,]) (r : int) (c : int) =
     let cur = map.[r,c]
-    if not (cur = Bomb) then
-        let s =
-            match cur with
-            | Safe x -> Safe (x + 1)
-        map.[r,c] <- s
+    match cur with
+         | Bomb -> ()
+         | Safe x -> map.[r,c] <- Safe (x + 1)
 
 let updateSafes (map : field[,]) (n : int) (m : int) (r : int) (c : int) =
     if r > 0 then // above, middle
@@ -48,9 +46,8 @@ let getFieldMap (lines : char[,]) (n : int) (m : int) : field[,] =
 let rec clearUp ( fieldmap : field[,] ) ( secret : char[,] ) ( exposed : char[,])
                 ( r : int ) ( c : int ) ( n : int ) ( m : int ) ( visited : HashSet<int * int> ) =
     if r < 0 || r >= n || c < 0 || c >= m then ()
-    elif visited.Contains (r, c) then ()//printfn "contains"; ()
+    elif visited.Contains (r, c) then ()
     else
-        //printfn "not contains"
         visited.Add (r, c) |> ignore
         exposed.[r,c] <- secret.[r,c]
         match fieldmap.[r,c] with

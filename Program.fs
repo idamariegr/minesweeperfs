@@ -19,20 +19,6 @@ let getCoord ( s : string ) ( max : int ) : int =
                         else failwithf "coordinate for %s may not be more than %A" s max
         | (false, _) -> failwithf "coordinate must be int"
 
-let rec clearUp ( fieldmap : field[,] ) ( secret : char[,] ) ( exposed : char[,])
-                ( r : int ) ( c : int ) ( n : int ) ( m : int ) ( visited : HashSet<int * int> ) =
-    if r < 0 || r >= n || c < 0 || c >= m then ()
-    elif visited.Contains (r, c) then ()//printfn "contains"; ()
-    else
-        //printfn "not contains"
-        visited.Add (r, c) |> ignore
-        exposed.[r,c] <- secret.[r,c]
-        match fieldmap.[r,c] with
-             | Safe 0 ->
-                 for rr in -1..1 do
-                     for cc in -1..1 do
-                         clearUp fieldmap secret exposed (r+rr) (c+cc) n m visited
-             | _ -> ()
 
 // inits
 let secretmap : char[,] = fileToChars(mappath)
