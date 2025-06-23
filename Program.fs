@@ -5,7 +5,7 @@ open visual
 open maps
 open fields
 
-let mappath = "./map1.txt"
+let mappath = "Assets/map1.txt"
 
 let gameOver (map: char[,])  (s: string) ( n : int ) (m : int) =
     printMap map n m
