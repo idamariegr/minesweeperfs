@@ -12,7 +12,7 @@ let incrementSafe (map : field[,]) (r : int) (c : int) =
 let decrementSafe ( map : field[,] ) ( r : int ) ( c : int ) ( cnt : byref<int> ) =
     match map.[r,c] with
         | Bomb -> cnt <- cnt + 1
-        | Safe x -> if x > 0 then map.[r,c] <- Safe (x-1); printfn "decremented %d at %d , %d to %d" x r c (x-1) else ()
+        | Safe x -> if x > 0 then map.[r,c] <- Safe (x-1) else ()
 
 let incrementSafeVals (map : field[,])
                       (n : int) (m : int)
@@ -73,16 +73,13 @@ let removeBomb ( map : field[,] )
     let mutable counter = 0
     map.[r,c] <- Safe 0
     cnt <- cnt - 1
-    printfn "decrementing around %d , %d" r c
     if r > 0 then
         decrementSafe map (r-1) c &counter
         if c > 0 then decrementSafe map (r-1) (c-1) &counter
-        printfn "checking lower right corner"
         if c < (n-1) then decrementSafe map (r-1) (c+1) &counter
     if r < (n-1) then
         decrementSafe map (r+1) c &counter
         if r > 0 then decrementSafe map (r+1) (c-1) &counter
-        printfn "checking upper right corner"
         if r < (m-1) then decrementSafe map (r+1) (c+1) &counter
     if c > 0 then decrementSafe map r (c-1) &counter
     if c < (m+1) then decrementSafe map r (c+1) &counter
