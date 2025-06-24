@@ -21,16 +21,16 @@ let incrementSafeVals (map : field[,])
         incrementSafe map (r-1) c // upper middle
         if c > 0 then incrementSafe map (r-1) (c-1) // upper left corner
         if c < n-1 then incrementSafe map (r-1) (c+1) // upper right corner
-    if r < n-1 then // below, middle
+    if r < (n-1) then // below, middle
         incrementSafe map (r+1) c // lower middle
         if c > 0 then incrementSafe map (r+1) (c-1) // lower left corner
-        if c < m-1 then incrementSafe map (r+1) (c+1) // lower right corner
+        if c < (m-1) then incrementSafe map (r+1) (c+1) // lower right corner
     if c > 0 then incrementSafe map r (c-1) // left middle
-    if c < m-1 then incrementSafe map r (c+1) // right middle
+    if c < (m-1) then incrementSafe map r (c+1) // right middle
 
 let updateNumsMap(map : field[,]) ( n : int ) ( m : int ) =
-    for r in 0..n-1 do
-        for c in 0..m-1 do
+    for r in 0..(n-1) do
+        for c in 0..(m-1) do
             if map.[r,c] = Bomb then incrementSafeVals map n m r c
 
 let randomMap ( bombs : int ) ( n : int ) ( m : int ) : field[,] =
@@ -72,7 +72,7 @@ let removeBomb ( map : field[,] )
     if not (map.[r,c] = Bomb) then ()
     else
         let mutable counter = 0
-        cnt <- cnt - 1
+        cnt <- cnt + 1
         if r > 0 then
             decrementSafe map (r-1) c &counter
             if c > 0 then decrementSafe map (r-1) (c-1) &counter

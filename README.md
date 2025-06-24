@@ -11,3 +11,6 @@ run the game from the root directory with `dotnet run`
     - if first chosen field is a bomb, then it is changed to a safe field. the values of the safe fields around it are decremented.
 - if safe field with value 0 is ever chosen, then it and all of it's neighbours are cleared recursively
 - keep taking input and updating the map until only bombs remain
+
+## todo
+- [ ] allow for one to regret a written row-index

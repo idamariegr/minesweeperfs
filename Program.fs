@@ -10,12 +10,15 @@ let gameOver (map: char[,])  (s: string) ( n : int ) ( m : int ) =
     printfn "%s" s
     Environment.Exit(3)
 
-let getCoord ( s : string ) ( max : int ) : int =
+let rec getCoord ( s : string ) ( max : int ) : int =
     printf "- %s: " s
     match Int32.TryParse(Console.ReadLine()) with
-        | (true, v) -> if not (v > max) then v
-                        else failwithf "coordinate for %s may not be more than %A" s max
-        | (false, _) -> failwithf "coordinate must be int"
+        | (true, v) ->  if ((v <= max) && (v >= 0)) then v
+                        else
+                            printfn "%s has to be between 0 and %d. Try again!" s max
+                            getCoord s max
+        | (false, _) -> printfn "input must be an int. Try again!"
+                        getCoord s max
 
 let gameRandom ( bombs : int ) ( n : int ) ( m : int ) =
     let fieldmap = randomMap bombs n m
@@ -27,7 +30,7 @@ let gameRandom ( bombs : int ) ( n : int ) ( m : int ) =
     printMap shownmap n m
     let r = getCoord "Row" (n - 1)
     let c = getCoord "Column" (m - 1)
-    removeBomb fieldmap r c n m &safeFieldsToGo// handles if first chosen coord is bomb
+    removeBomb fieldmap r c n m &safeFieldsToGo// handles if first chosen field is bomb
     let secretmap = fieldmap |> Array2D.map(fieldToChar)
     clearUp fieldmap secretmap shownmap r c n m visited &safeFieldsToGo
 
@@ -43,4 +46,4 @@ let gameRandom ( bombs : int ) ( n : int ) ( m : int ) =
     gameOver secretmap "Game Won!" n m
 
 // running the game
-gameRandom 90 15 15
+gameRandom 20 10 20
