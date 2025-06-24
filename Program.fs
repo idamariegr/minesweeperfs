@@ -22,20 +22,22 @@ let getCoord ( s : string ) ( max : int ) : int =
 let gameRandom ( bombs : int ) ( n : int ) ( m : int ) =
     let fieldmap = randomMap bombs n m
     let shownmap = Array2D.create n m hidechar
-    let secretmap = fieldmap |> Array2D.map(fieldToChar)
     let visited = HashSet<int * int>()
     let mutable safeFieldsToGo = (n * m) - bombs
-    //let mutable firstInput = true
+
+    //getting input for the first time
+    printMap shownmap n m
+    let r = getCoord "Row" (n - 1)
+    let c = getCoord "Column" (m - 1)
+    removeBomb fieldmap r c n m &safeFieldsToGo// handles if first chosen coord is bomb
+    let secretmap = fieldmap |> Array2D.map(fieldToChar)
+    clearUp fieldmap secretmap shownmap r c n m visited &safeFieldsToGo
+
+    // game loop
     while safeFieldsToGo > 0 do
         printMap shownmap n m
         let r = getCoord "Row" (n - 1)
         let c = getCoord "Column" (m - 1)
-
-        // if firstInput && fieldmap.[r,c] = Bomb then
-        //     let fieldmap = randomMap bombs n m
-        //     let secretmap = fieldmap |> Array2D.map(fieldToChar)
-        //     ()
-        // else firstInput <- false
 
         match fieldmap.[r,c] with
             | Safe x -> clearUp fieldmap secretmap shownmap r c n m visited &safeFieldsToGo
@@ -67,4 +69,4 @@ let gameFromPath ( path : string) =
 
 // running the game
 //gameFromPath(mappath)
-gameRandom 1 15 15
+gameRandom 35 15 15
