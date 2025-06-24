@@ -79,8 +79,8 @@ let removeBomb ( map : field[,] )
         if c < (n-1) then decrementSafe map (r-1) (c+1) &counter
     if r < (n-1) then
         decrementSafe map (r+1) c &counter
-        if r > 0 then decrementSafe map (r+1) (c-1) &counter
-        if r < (m-1) then decrementSafe map (r+1) (c+1) &counter
+        if c > 0 then decrementSafe map (r+1) (c-1) &counter
+        if c < (m-1) then decrementSafe map (r+1) (c+1) &counter
     if c > 0 then decrementSafe map r (c-1) &counter
     if c < (m+1) then decrementSafe map r (c+1) &counter
     map.[r,c] <- Safe counter
