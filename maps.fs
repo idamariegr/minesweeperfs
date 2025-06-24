@@ -70,17 +70,17 @@ let removeBomb ( map : field[,] )
                ( n : int ) ( m : int )
                ( cnt : byref<int> ) =
     if not (map.[r,c] = Bomb) then ()
-    let mutable counter = 0
-    map.[r,c] <- Safe 0
-    cnt <- cnt - 1
-    if r > 0 then
-        decrementSafe map (r-1) c &counter
-        if c > 0 then decrementSafe map (r-1) (c-1) &counter
-        if c < (n-1) then decrementSafe map (r-1) (c+1) &counter
-    if r < (n-1) then
-        decrementSafe map (r+1) c &counter
-        if c > 0 then decrementSafe map (r+1) (c-1) &counter
-        if c < (m-1) then decrementSafe map (r+1) (c+1) &counter
-    if c > 0 then decrementSafe map r (c-1) &counter
-    if c < (m+1) then decrementSafe map r (c+1) &counter
-    map.[r,c] <- Safe counter
+    else
+        let mutable counter = 0
+        cnt <- cnt - 1
+        if r > 0 then
+            decrementSafe map (r-1) c &counter
+            if c > 0 then decrementSafe map (r-1) (c-1) &counter
+            if c < (n-1) then decrementSafe map (r-1) (c+1) &counter
+        if r < (n-1) then
+            decrementSafe map (r+1) c &counter
+            if c > 0 then decrementSafe map (r+1) (c-1) &counter
+            if c < (m-1) then decrementSafe map (r+1) (c+1) &counter
+        if c > 0 then decrementSafe map r (c-1) &counter
+        if c < (m+1) then decrementSafe map r (c+1) &counter
+        map.[r,c] <- Safe counter

@@ -43,4 +43,4 @@ let gameRandom ( bombs : int ) ( n : int ) ( m : int ) =
     gameOver secretmap "Game Won!" n m
 
 // running the game
-gameRandom 100 15 15
+gameRandom 45 15 15
