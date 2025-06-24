@@ -7,5 +7,5 @@ run the game with:
 
 ## todo
 - [x] generate random map
-- [ ] give map based on first coordinates (so that they don't hit a bomb)
-- [ ] colored numbers?
+- [x] give map based on first coordinates (so that they don't hit a bomb)
+- [ ] testing?
