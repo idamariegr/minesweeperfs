@@ -17,21 +17,19 @@ let decrementSafe ( map : field[,] ) ( r : int ) ( c : int ) ( cnt : byref<int> 
 let incrementSafeVals (map : field[,])
                       (n : int) (m : int)
                       (r : int) (c : int) =
-    if r > 0 then // above, middle
+    if r > 0 then
         incrementSafe map (r-1) c // upper middle
         if c > 0 then incrementSafe map (r-1) (c-1) // upper left corner
-        if c < n-1 then incrementSafe map (r-1) (c+1) // upper right corner
-    if r < (n-1) then // below, middle
+        if c < (m-1) then incrementSafe map (r-1) (c+1) // upper right corner
+    if r < (n-1) then
         incrementSafe map (r+1) c // lower middle
         if c > 0 then incrementSafe map (r+1) (c-1) // lower left corner
         if c < (m-1) then incrementSafe map (r+1) (c+1) // lower right corner
     if c > 0 then incrementSafe map r (c-1) // left middle
     if c < (m-1) then incrementSafe map r (c+1) // right middle
 
-let updateNumsMap(map : field[,]) ( n : int ) ( m : int ) =
-    for r in 0..(n-1) do
-        for c in 0..(m-1) do
-            if map.[r,c] = Bomb then incrementSafeVals map n m r c
+let updateNumsMap(fmap : field[,]) ( n : int ) ( m : int ) =
+    fmap |> Array2D.iteri (fun r c v -> if v = Bomb then incrementSafeVals fmap n m r c)
 
 let randomMap ( bombs : int ) ( n : int ) ( m : int ) : field[,] =
     let map = Array2D.create n m (Safe 0)
@@ -76,7 +74,7 @@ let removeBomb ( map : field[,] )
         if r > 0 then
             decrementSafe map (r-1) c &counter
             if c > 0 then decrementSafe map (r-1) (c-1) &counter
-            if c < (n-1) then decrementSafe map (r-1) (c+1) &counter
+            if c < (m-1) then decrementSafe map (r-1) (c+1) &counter
         if r < (n-1) then
             decrementSafe map (r+1) c &counter
             if c > 0 then decrementSafe map (r+1) (c-1) &counter
