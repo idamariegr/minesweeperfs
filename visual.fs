@@ -1,7 +1,7 @@
 module visual
 open System
 
-let printMap (map: char[,]) (rows : int) (cols : int) =
+let printMap ( map: char[,] ) ( rows : int ) ( cols : int ) =
     // column numbers
     printf "    "
     for i in 0 .. cols-1 do

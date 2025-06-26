@@ -8,7 +8,7 @@ type field =
     | Bomb
     | Safe of int
 
-let fieldToChar (f : field) : char =
+let fieldToChar ( f : field ) : char =
     match f with
         | Bomb -> bombchar
         | Safe 0 -> blankchar

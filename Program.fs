@@ -5,7 +5,7 @@ open visual
 open maps
 open fields
 
-let gameOver (map: char[,])  (s: string) ( n : int ) ( m : int ) =
+let gameOver ( map: char[,] ) ( s: string ) ( n : int ) ( m : int ) =
     printMap map n m
     printfn "%s" s
     Environment.Exit(3)
@@ -21,7 +21,6 @@ let rec getCoord ( s : string ) ( max : int ) : int =
                         getCoord s max
 
 let gameRandom ( bombs : int ) ( n : int ) ( m : int ) =
-    let fieldmap = randomMap bombs n m
     let shownmap = Array2D.create n m hidechar
     let visited = HashSet<int * int>()
     let mutable safeFieldsToGo = (n * m) - bombs
@@ -30,7 +29,7 @@ let gameRandom ( bombs : int ) ( n : int ) ( m : int ) =
     printMap shownmap n m
     let r = getCoord "Row" (n - 1)
     let c = getCoord "Column" (m - 1)
-    removeBomb fieldmap r c n m &safeFieldsToGo// handles if first chosen field is bomb
+    let fieldmap = randomMap bombs n m r c
     let secretmap = fieldmap |> Array2D.map(fieldToChar)
     clearUp fieldmap secretmap shownmap r c n m visited &safeFieldsToGo
 
@@ -46,4 +45,4 @@ let gameRandom ( bombs : int ) ( n : int ) ( m : int ) =
     gameOver secretmap "Game Won!" n m
 
 // running the game
-gameRandom 5 10 20
+gameRandom 15 11 16
