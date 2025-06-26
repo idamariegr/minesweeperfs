@@ -31,8 +31,7 @@ let randomMap ( bombs : int ) ( n : int ) ( m : int ) ( r : int ) ( c : int ) : 
     let rnd = new Random()
     let mutable togo = bombs
     while togo > 0 do
-        let randRow = rnd.Next(0,n) // lower bound inclusive, upper bound exclusive
-        let randCol = rnd.Next(0,m)
+        let randRow, randCol = rnd.Next(n), rnd.Next(m) // gives non-negative int, upper bound exclusive
         if (not (map.[randRow,randCol] = Bomb)) && (not (randRow = r && randCol = c)) then
             map.[randRow,randCol] <- Bomb
             togo <- togo - 1
